@@ -7,4 +7,10 @@
             SELECT * FROM customers LIMIT 20
         ]]>
     </select>
+
+    <select id="selectCustomerListPage" resultType="com.bitc.pagetest.dto.CustomersDto">
+        <![CDATA[
+            SELECT * FROM customers
+        ]]>
+    </select>
 </mapper>
