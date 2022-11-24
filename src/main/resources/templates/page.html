@@ -11,6 +11,9 @@
     <div class="container mt-5 p-5">
         <div class="row">
             <div class="col-sm">
+                
+                <p th:text="${customersList}"></p>
+                
                 <table class="table table-hover table-striped">
                     <thead>
                         <tr>
@@ -22,18 +25,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:if="${#lists.size(customersList)} > 0" th:each="item : ${customersList}">
+                        <tr th:if="${#lists.size(customersList.getList())} > 0" th:each="item : ${customersList.getList()}">
                             <td th:text="${item.customerId}"></td>
                             <td th:text="|${item.lastName} ${item.firstName}|"></td>
                             <td th:text="${item.email}"></td>
                             <td th:text="${item.createDate}"></td>
                             <td th:text="${item.lastUpdate}"></td>
                         </tr>
-                        <tr th:unless="${#lists.size(customersList)} > 0">
+                        <tr th:unless="${#lists.size(customersList.getList())} > 0">
                             <td>조회된 내용이 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <!--타임리프 classappend를 사용해서 이전 페이지 정보가 없으면 class에 disabled를 추가-->
+                        <li class="page-item" th:classappend="${customersList.getPrePage() == 0} ? 'disabled'">
+                            <!--()를 사용하여 매개변수를 추가, pageNum 라는 이름으로 매개변수를 전달..-->
+                            <a class="page-link" th:href="@{/page(pageNum=${customersList.getPrePage()})}">&laquo</a>
+                        </li>
+                        <!--타임리프의 숫자 객체인 numbers를 이용하면 숫자 배열을 만들어준다.-->
+                        <li class="page-item" th:each="page : ${#numbers.sequence(customersList.getNavigateFirstPage(), customersList.getNavigateLastPage())}"
+                            th:class="${page == customersList.getPageNum()} ? 'active'">
+                            <a class="page-link" th:text="${page}" th:href="@{/page(pageNum=${page})}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${customersList.getNextPage() == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/page(pageNum=${customersList.getNextPage()})}">&raquo</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
